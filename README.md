@@ -1,5 +1,5 @@
 # DataProject-Logica.-Consultas-de-SQL
-Proyecto donde se aplican los conocimientos aprendidos en el módulo de SQL
+ 📖 Descripción Proyecto donde se aplican los conocimientos aprendidos en el módulo de SQL
 
 1. Crea el esquema de la BBDD.
 En primer lugar, una vez abierto DBeaver, para crear el esquema de la BBDD que he utilizado para este proyecto, dentro de Bases de Datos >> postgres >> Esquemas clico con el botón derecho y selecciono "Crear Nuevo Esquema". Le doy un nombre ("ProyectoLogicaSQL) y acepto. A continuación, establezco este nuevo esquema por defecto, clico botón derecho y selecciono "Editor SQL" >> "Script SQL", pego la información del fichero "BBDD_Proyecto", ejecuto el script y cuando refresco la información en mi base de datos de DBeaver ya tengo las tablas creadas.
