@@ -90,4 +90,27 @@ inner join film as f2
 on f.film_id = f2.film_id
 where f2.title = 'EGG IGBY';
 
+19. Selecciona todos los nombres de las películas únicos. (No entiendo muy bien esta pregunta).
+select title
+from film f;
+
+20. Encuentra el título de las películas que son comedias y tienen una duración mayor a 180 minutos en la tabla “filmˮ.
+select title
+from film f
+inner join film_category fc 
+on f.film_id = fc.film_id
+where length > '180'
+and category_id = '5';
+
+21. Encuentra las categorías de películas que tienen un promedio de duración superior a 110 minutos y muestra el nombre de la categoría junto con el promedio de duración.
+select name, avg(length)
+from film f
+inner join film_category fc 
+on f.film_id = fc.film_id
+inner join category c 
+on fc.category_id = c.category_id
+where length > '110'
+group by c."name" ;
+
+21. ¿Cuál es la media de duración del alquiler de las películas?
 
