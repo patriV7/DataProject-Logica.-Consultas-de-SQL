@@ -216,3 +216,148 @@ where "first_name" in ('JOHNNY');
 select "first_name" as nombre, "last_name" as apellido
 from actor a;
 
+/*37. Encuentra el ID del actor más bajo y más alto en la tabla actor.*/
+select max(actor_id) as maximo_id, min (actor_id) as minimo_id
+from actor a;
+
+ /*38. Cuenta cuántos actores hay en la tabla “actorˮ.*/
+select count(actor_id) as numero_actores
+from actor a;
+
+ /*39. Selecciona todos los actores y ordénalos por apellido en orden ascendente.*/
+select concat("first_name",' ',"last_name") as nombre_actor
+from actor a
+order by last_name asc; 
+
+/*40. Selecciona las primeras 5 películas de la tabla “filmˮ.*/
+select title as pelicula
+from film film 
+order by film_id asc
+limit 5;
+
+/*41. Agrupa los actores por su nombre y cuenta cuántos actores tienen el mismo nombre. ¿Cuál es el nombre más repetido?*/
+select "first_name" as nombre, count(distinct(actor_id)) as cantidad_actores
+from actor a
+group by first_name
+order by count(distinct(actor_id)) desc;
+--Los nombres más repetidos son Penélope, Kenneth y Julia
+
+/*42. Encuentra todos los alquileres y los nombres de los clientes que los realizaron.*/
+select rental_id as alquiler, concat("first_name",' ',"last_name") as cliente
+from rental r
+inner join customer c
+on r.customer_id = c.customer_id;
+
+/*43. Muestra todos los clientes y sus alquileres si existen, incluyendo aquellos que no tienen alquileres.*/
+select concat("first_name",' ',"last_name") as cliente, rental_id as alquiler
+from customer c
+left join rental r
+on c.customer_id = r.customer_id
+order by concat("first_name",' ',"last_name");
+
+/*44. Realiza un CROSS JOIN entre las tablas film y category. ¿Aporta valor esta consulta? ¿Por qué? Deja después de la consulta la contestación.*/
+select *
+from film f
+cross join category c;
+--Esta consulta no tiene mucho sentido porque a cada film_id le corresponde una categoría única y determinada, asi que no nos aporta valor saber qué posibles combinaciones de categorías e id se pueden hacer...
+
+/*45. Encuentra los actores que han participado en películas de la categoría 'Action'.*/
+select concat("first_name",' ',"last_name") as actores_action
+from actor a
+inner join film_actor fa
+on a.actor_id = fa.actor_id 
+inner join film_category fc
+on fa.film_id = fc.film_id
+inner join category c
+on fc.category_id = c.category_id
+where c.category_id = 1;
+
+/*46. Encuentra todos los actores que no han participado en películas.*/
+select concat("first_name",' ',"last_name") as actores_sin_pelicula
+from actor a
+left join film_actor fa
+on a.actor_id = fa.actor_id
+where film_id is null;
+
+/*47. Selecciona el nombre de los actores y la cantidad de películas en las que han participado.*/
+select concat("first_name",' ',"last_name") as actores, count(film_id) as numero_peliculas
+from actor a
+inner join film_actor fa
+on a.actor_id = fa.actor_id
+group by concat("first_name",' ',"last_name");
+
+/*48. Crea una vista llamada “actor_num_peliculasˮ que muestre los nombres de los actores y el número de películas en las que han participado.*/
+create view actor_num_peliculas as
+select concat("first_name",' ',"last_name") as actores, count(film_id) as numero_peliculas
+from actor a
+inner join film_actor fa
+on a.actor_id = fa.actor_id
+group by concat("first_name",' ',"last_name");
+
+select * from actor_num_peliculas;
+
+/*49. Calcula el número total de alquileres realizados por cada cliente.*/
+select concat("first_name",' ',"last_name") as nombre_cliente, count(rental_id) as num_alquileres
+from customer c
+inner join rental r
+on c.customer_id = r.customer_id
+group by concat("first_name",' ',"last_name");
+
+/*50. Calcula la duración total de las películas en la categoría 'Action'.*/
+select sum(length)
+from film f
+inner join film_category fc
+on f.film_id = fc.film_id
+inner join category c
+on fc.category_id = c.category_id 
+where c.category_id = 1;
+
+/*51. Crea una tabla temporal llamada “cliente_rentas_temporalˮ para almacenar el total de alquileres por cliente.*/
+create temporary table cliente_rentas_temporal as
+select concat("first_name",' ',"last_name") as nombre_cliente, count(rental_id) as num_alquileres
+from customer c
+inner join rental r
+on c.customer_id = r.customer_id
+group by concat("first_name",' ',"last_name");
+
+select * from cliente_rentas_temporal;
+
+/*52. Crea una tabla temporal llamada “peliculas_alquiladasˮ que almacene las películas que han sido alquiladas al menos 10 veces.*/
+create temporary table peliculas_alquiladas as
+select title as pelicula, count(rental_id) as num_alquileres
+from film f
+inner join inventory i
+on f.film_id = i.film_id
+inner join rental r
+on r.inventory_id = i.inventory_id
+group by title
+having count(rental_id) >= 10;
+
+select * from peliculas_alquiladas;
+
+/*53. Encuentra el título de las películas que han sido alquiladas por el cliente con el nombre ‘Tammy Sandersʼ y que aún no se han devuelto. Ordena los resultados alfabéticamente por título de película.*/
+select title as pelicula_alquilada_TammySanders
+from film f
+inner join inventory i
+on f.film_id = i.film_id
+inner join rental r
+on r.inventory_id = i.inventory_id
+inner join customer c
+on r.customer_id = c.customer_id
+where c.customer_id in (select customer_id from customer c where "first_name" = 'TAMMY' and "last_name" = 'SANDERS')
+order by title asc;
+
+/*54. Encuentra los nombres de los actores que han actuado en al menos una película que pertenece a la categoría ‘Sci-Fiʼ. Ordena los resultados alfabéticamente por apellido.*/
+select distinct(concat("first_name",' ',"last_name")) as actores_SciFi
+from actor a
+inner join film_actor fa
+on a.actor_id = fa.actor_id
+inner join film_category fc
+on fa.film_id =fc.film_id
+inner join category c
+on fc.category_id = c.category_id
+where c.category_id = 14
+order by concat("first_name",' ',"last_name") asc;
+
+
+
