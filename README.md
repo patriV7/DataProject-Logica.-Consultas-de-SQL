@@ -359,5 +359,110 @@ on fc.category_id = c.category_id
 where c.category_id = 14
 order by concat("first_name",' ',"last_name") asc;
 
+/*55. Encuentra el nombre y apellido de los actores que han actuado en películas que se alquilaron después de que la película ‘Spartacus Cheaperʼ se alquilara por primera vez. Ordena los resultados alfabéticamente por apellido.*/
+--Primero quiero saber qué fecha corresponde a la fecha en la que 'Spartacus Cheaper' se alquiló por primera vez
+select min(rental_date)
+from rental r
+inner join inventory i
+on r.inventory_id = i.inventory_id
+inner join film f
+on i.film_id = f.film_id
+where f.title = 'SPARTACUS CHEAPER' --2005-07-08 06:43:42.000
 
+--A continuación, busco los actores que han actuado en peliculas que se alquilaran posterior a la fecha 2005-07-08 06:43:42.000
+select distinct(concat(a.first_name, ' ', a.last_name))
+from actor a
+inner join film_actor fa
+on a.actor_id = fa.actor_id
+inner join film f
+on fa.film_id = f.film_id
+inner join inventory i
+on f.film_id = i.film_id
+inner join rental r
+on i.inventory_id = r.inventory_id
+where r.rental_date > '2005-07-08 06:43:42.000'
+order by concat(a.first_name, ' ', a.last_name) asc; 
+
+/*56. Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría ‘Musicʼ.*/
+select category_id
+from category c
+where name = 'Music'; --consulta para saber qué categoría es 'Music'
+
+select distinct(concat("first_name",' ',"last_name")) as actores_no_music
+from actor a
+inner join film_actor fa
+on a.actor_id = fa.actor_id
+inner join film_category fc
+on fa.film_id =fc.film_id
+inner join category c
+on fc.category_id = c.category_id
+where c.category_id <> 12;
+
+/*57. Encuentra el título de todas las películas que fueron alquiladas por más de 8 días.*/
+select title
+from film f
+where rental_duration > 8;
+
+/*58. Encuentra el título de todas las películas que son de la misma categoría que ‘Animationʼ.*/
+select category_id
+from category c
+where name = 'Animation'; --consulta para saber qué categoría es 'Animation' --2
+
+select title 
+from film f
+inner join film_category fc
+on f.film_id = fc.film_id
+inner join category c
+on fc.category_id = c.category_id
+where c.category_id = 2;
+
+/*59. Encuentra los nombres de las películas que tienen la misma duración que la película con el título ‘Dancing Feverʼ. Ordena los resultados alfabéticamente por título de película.*/
+select title 
+from film f
+where rental_duration = (select rental_duration from film f where title = 'DANCING FEVER')
+order by title asc;
+
+/*60. Encuentra los nombres de los clientes que han alquilado al menos 7 películas distintas. Ordena los resultados alfabéticamente por apellido.*/
+select c.first_name
+from customer c
+inner join rental r 
+on c.customer_id = r.customer_id
+group by c.first_name
+having count(distinct r.rental_id) >= 7
+order by first_name asc;
+
+/*61. Encuentra la cantidad total de películas alquiladas por categoría y muestra el nombre de la categoría junto con el recuento de alquileres.*/
+select c.name as categoria, count(distinct(r.rental_id)) as recuento_alquileres
+from category c
+inner join film_category fc
+on c.category_id = fc.category_id
+inner join film f
+on fc.film_id = f.film_id
+inner join inventory i
+on f.film_id = i.film_id
+inner join rental r
+on i.inventory_id = r.inventory_id
+group by c.name;
+
+/*62. Encuentra el número de películas por categoría estrenadas en 2006.*/
+select c.name as categoria, count(distinct(f.film_id)) as peliculas_categoria_2006
+from category c
+inner join film_category fc
+on c.category_id = fc.category_id
+inner join film f
+on fc.film_id = f.film_id
+where f.release_year = 2006
+group by c.name;
+
+/*63. Obtén todas las combinaciones posibles de trabajadores con las tiendas que tenemos.*/
+select *
+from staff s 
+cross join store ss;
+
+/*64. Encuentra la cantidad total de películas alquiladas por cada cliente y muestra el ID del cliente, su nombre y apellido junto con la cantidad de películas alquiladas.*/
+select c.customer_id as IDCLIENTE, c.first_name as nombre, c.last_name as apellido, count(distinct(r.rental_id)) as recuento_alquileres
+from customer c
+inner join rental r
+on c.customer_id = r.customer_id
+group by c.customer_id;
 
