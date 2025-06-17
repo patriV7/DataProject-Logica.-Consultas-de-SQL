@@ -30,7 +30,7 @@ order by length asc;
 /*6. Encuentra el nombre y apellido de los actores que tengan ‘Allenʼ en su apellido.*/
 select concat ("first_name",' ',"last_name") as actores_Allen
 from actor
-where "last_name" IN ('Allen');
+where "last_name" ILIKE ('Allen');
 
 /*7. Encuentra la cantidad total de películas en cada clasificación de la tabla “filmˮ y muestra la clasificación junto con el recuento.*/
 select rating as clasificacion, count(film_id) as recuento
@@ -111,8 +111,8 @@ inner join film_category fc
 on f.film_id = fc.film_id
 inner join category c 
 on fc.category_id = c.category_id
-having avg(length) > 110
-group by c."name" ;
+group by categoria
+having avg(length) > 110;
 
  /*21. ¿Cuál es la media de duración del alquiler de las películas?*/
 SELECT AVG(return_date - rental_date) AS media_duracion
@@ -172,7 +172,7 @@ select concat("first_name", ' ',"last_name") as actor, count(film_id) as numero_
 from film_actor fa
 inner join actor a
 on fa.actor_id = a.actor_id
-group by a.actor_id;
+group by actor;
 
 /*31. Obtener todas las películas y mostrar los actores que han actuado en ellas, incluso si algunas películas no tienen actores asociados.*/
 select title as pelicula, concat("first_name", ' ',"last_name") as actores_que_participan
@@ -201,16 +201,17 @@ inner join rental r
 on r.inventory_id = i.inventory_id;
 
 /*34. Encuentra los 5 clientes que más dinero se hayan gastado con nosotros.*/
-select concat("first_name", ' ',"last_name") as cliente_mas_gasta, sum (amount)
+select concat("first_name", ' ',"last_name") as cliente_mas_gasta, sum (amount) as gasto
 from customer c
 inner join payment p
 on c.customer_id = p.customer_id
-order by concat("first_name", ' ',"last_name") desc limit 5;
+group by cliente_mas_gasta
+order by gasto limit 5;
 
 /*35. Selecciona todos los actores cuyo primer nombre es 'Johnny'.*/
 select concat("first_name", ' ',"last_name") as actor_Johnny
 from actor a
-where "first_name" in ('JOHNNY');
+where "first_name" ILIKE ('JOHNNY');
 
 /*36. Renombra la columna “first_nameˮ como Nombre y “last_nameˮ como Apellido.*/
 select "first_name" as nombre, "last_name" as apellido
