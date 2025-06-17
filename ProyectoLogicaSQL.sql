@@ -7,7 +7,7 @@ order by title asc; --195 resultados
 /*3. Encuentra los nombres de los actores que tengan un “actor_idˮ entre 30 y 40.*/
 select concat("first_name",' ',"last_name") as actores_id_30_40 --select "first_name"
 from actor a 
-where actor_id between '30' and '40'
+where actor_id between 30 and 40
 order by concat("first_name",' ',"last_name") asc; --11 resultados
 
 /*4. Obtén las películas cuyo idioma coincide con el idioma original.*/
@@ -24,7 +24,7 @@ order by length asc;
 /*6. Encuentra el nombre y apellido de los actores que tengan ‘Allenʼ en su apellido.*/
 select concat ("first_name",' ',"last_name") as actores_Allen
 from actor
-where "last_name" IN ('ALLEN');
+where "last_name" IN ('Allen');
 
 /*7. Encuentra la cantidad total de películas en cada clasificación de la tabla “filmˮ y muestra la clasificación junto con el recuento.*/
 select rating as clasificacion, count(film_id) as recuento
@@ -34,7 +34,7 @@ group by rating;
 /*8. Encuentra el título de todas las películas que son ‘PG-13ʼ o tienen una duración mayor a 3 horas en la tabla film.*/
 select title as peliculas_pg13_o_mas_180
 from film f  
-where "rating" = 'PG-13' or "length" > '180';
+where "rating" = 'PG-13' or "length" > 180;
 
 /*9. Encuentra la variabilidad de lo que costaría reemplazar las películas.*/
 select variance(replacement_cost ) as variabilidad_reemplazo
@@ -94,8 +94,8 @@ select title as comedias_mas_180
 from film f
 inner join film_category fc 
 on f.film_id = fc.film_id
-where length > '180'
-and category_id = '5';
+where length > 180
+and category_id = 5;
 
 /*20. Encuentra las categorías de películas que tienen un promedio de duración superior a 110 minutos y muestra el nombre de la categoría
 junto con el promedio de duración.*/
@@ -105,8 +105,8 @@ inner join film_category fc
 on f.film_id = fc.film_id
 inner join category c 
 on fc.category_id = c.category_id
-where length > '110'
-group by c."name" ;
+group by categoria
+having avg(length) > 110;
 
  /*21. ¿Cuál es la media de duración del alquiler de las películas?*/
 SELECT AVG(return_date - rental_date) AS media_duracion
@@ -166,7 +166,7 @@ select concat("first_name", ' ',"last_name") as actor, count(film_id) as numero_
 from film_actor fa
 inner join actor a
 on fa.actor_id = a.actor_id
-group by a.actor_id;
+group by actor;
 
 /*31. Obtener todas las películas y mostrar los actores que han actuado en ellas, incluso si algunas películas no tienen actores asociados.*/
 select title as pelicula, concat("first_name", ' ',"last_name") as actores_que_participan
@@ -195,16 +195,17 @@ inner join rental r
 on r.inventory_id = i.inventory_id;
 
 /*34. Encuentra los 5 clientes que más dinero se hayan gastado con nosotros.*/
-select concat("first_name", ' ',"last_name") as cliente_mas_gasta
+select concat("first_name", ' ',"last_name") as cliente_mas_gasta, sum (amount) as gasto
 from customer c
 inner join payment p
 on c.customer_id = p.customer_id
-order by amount desc limit 5;
+group by cliente_mas_gasta
+order by gasto limit 5;
 
 /*35. Selecciona todos los actores cuyo primer nombre es 'Johnny'.*/
 select concat("first_name", ' ',"last_name") as actor_Johnny
 from actor a
-where "first_name" in ('JOHNNY');
+where "first_name" ILIKE ('JOHNNY');
 
 /*36. Renombra la columna “first_nameˮ como Nombre y “last_nameˮ como Apellido.*/
 select "first_name" as nombre, "last_name" as apellido
