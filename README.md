@@ -13,7 +13,7 @@ order by title asc; --195 resultados
 /*3. Encuentra los nombres de los actores que tengan un “actor_idˮ entre 30 y 40.*/
 select concat("first_name",' ',"last_name") as actores_id_30_40 --select "first_name"
 from actor a 
-where actor_id between '30' and '40'
+where actor_id between 30 and 40
 order by concat("first_name",' ',"last_name") asc; --11 resultados
 
 /*4. Obtén las películas cuyo idioma coincide con el idioma original.*/
@@ -30,7 +30,7 @@ order by length asc;
 /*6. Encuentra el nombre y apellido de los actores que tengan ‘Allenʼ en su apellido.*/
 select concat ("first_name",' ',"last_name") as actores_Allen
 from actor
-where "last_name" IN ('ALLEN');
+where "last_name" IN ('Allen');
 
 /*7. Encuentra la cantidad total de películas en cada clasificación de la tabla “filmˮ y muestra la clasificación junto con el recuento.*/
 select rating as clasificacion, count(film_id) as recuento
@@ -40,7 +40,7 @@ group by rating;
 /*8. Encuentra el título de todas las películas que son ‘PG-13ʼ o tienen una duración mayor a 3 horas en la tabla film.*/
 select title as peliculas_pg13_o_mas_180
 from film f  
-where "rating" = 'PG-13' or "length" > '180';
+where "rating" = 'PG-13' or "length" > 180;
 
 /*9. Encuentra la variabilidad de lo que costaría reemplazar las películas.*/
 select variance(replacement_cost ) as variabilidad_reemplazo
@@ -100,8 +100,8 @@ select title as comedias_mas_180
 from film f
 inner join film_category fc 
 on f.film_id = fc.film_id
-where length > '180'
-and category_id = '5';
+where length > 180
+and category_id = 5;
 
 /*20. Encuentra las categorías de películas que tienen un promedio de duración superior a 110 minutos y muestra el nombre de la categoría
 junto con el promedio de duración.*/
@@ -111,7 +111,7 @@ inner join film_category fc
 on f.film_id = fc.film_id
 inner join category c 
 on fc.category_id = c.category_id
-where length > '110'
+having avg(length) > 110
 group by c."name" ;
 
  /*21. ¿Cuál es la media de duración del alquiler de las películas?*/
@@ -201,11 +201,11 @@ inner join rental r
 on r.inventory_id = i.inventory_id;
 
 /*34. Encuentra los 5 clientes que más dinero se hayan gastado con nosotros.*/
-select concat("first_name", ' ',"last_name") as cliente_mas_gasta
+select concat("first_name", ' ',"last_name") as cliente_mas_gasta, sum (amount)
 from customer c
 inner join payment p
 on c.customer_id = p.customer_id
-order by amount desc limit 5;
+order by concat("first_name", ' ',"last_name") desc limit 5;
 
 /*35. Selecciona todos los actores cuyo primer nombre es 'Johnny'.*/
 select concat("first_name", ' ',"last_name") as actor_Johnny
