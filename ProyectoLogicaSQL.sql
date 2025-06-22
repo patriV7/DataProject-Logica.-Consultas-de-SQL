@@ -105,7 +105,7 @@ inner join film_category fc
 on f.film_id = fc.film_id
 inner join category c 
 on fc.category_id = c.category_id
-group by categoria
+group by name
 having avg(length) > 110;
 
  /*21. ¿Cuál es la media de duración del alquiler de las películas?*/
@@ -166,7 +166,7 @@ select concat("first_name", ' ',"last_name") as actor, count(film_id) as numero_
 from film_actor fa
 inner join actor a
 on fa.actor_id = a.actor_id
-group by actor;
+group by  concat("first_name", ' ',"last_name");
 
 /*31. Obtener todas las películas y mostrar los actores que han actuado en ellas, incluso si algunas películas no tienen actores asociados.*/
 select title as pelicula, concat("first_name", ' ',"last_name") as actores_que_participan
@@ -199,7 +199,7 @@ select concat("first_name", ' ',"last_name") as cliente_mas_gasta, sum (amount) 
 from customer c
 inner join payment p
 on c.customer_id = p.customer_id
-group by cliente_mas_gasta
+group by concat("first_name", ' ',"last_name")
 order by gasto limit 5;
 
 /*35. Selecciona todos los actores cuyo primer nombre es 'Johnny'.*/
